@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.vicky.listme.ui.theme.ListMeTheme
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +38,24 @@ class MainActivity : ComponentActivity() {
                     Row (
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        OutlinedTextField(value = name, onValueChange = { text ->
-                            name = text
-                        })
+                        OutlinedTextField(
+                            value = name,
+                            onValueChange = { text ->
+                                name = text
+                            },
+                            modifier = Modifier.weight(
+                                weight = 2.0f,
+                                true
+                            )
+                        )
+                        
+                        Spacer(modifier = Modifier.width(16.dp))
+                        
                         Button (onClick = {
-                            names = names + name
-                            name = ""
+                            if(name.isNotBlank()){
+                                names = names + name
+                                name = ""
+                            }
                         }){
                             Text(text = "Add")
                         }
@@ -50,7 +63,17 @@ class MainActivity : ComponentActivity() {
 
                     LazyColumn {
                         items(names){ currentName ->
-                            Text(text = currentName)
+                            Text(
+                                text = currentName,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            )
+                            Divider(
+                                modifier = Modifier.fillMaxWidth(),
+                                color = Color.Black,
+                                thickness = 1.dp
+                            )
                         }
                     }
                 }
