@@ -1,19 +1,9 @@
-Flow
+chapter 3
+---------
 
-Goal [1]
+this chapter is about:
 
-- able to setup jetpack project
-- able to create minimal layout with UI components and interactions 
-
-
-How to Create Compose Project
------------------------------
-
-1. File -> New -> Empty Compose Activity
-
-
-Goal [2]
-
-Goal [3]
-
-
+1. navigations
+2. moving between screens
+3. passing data between screens
+4. Context

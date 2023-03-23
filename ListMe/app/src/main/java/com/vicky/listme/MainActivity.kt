@@ -1,5 +1,6 @@
 package com.vicky.listme
 
+import android.R
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,6 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,67 +24,143 @@ import com.vicky.listme.ui.theme.ListMeTheme
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+
+
+@Composable
+fun HomeScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Home Screen"
+        )
+    }
+}
+
+@Composable
+fun ProfileScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Profile Screen"
+        )
+    }
+}
+
+@Composable
+fun SettingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Setting Screen"
+        )
+    }
+}
+
+@Composable
+fun Navigation(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home"){
+            HomeScreen()
+        }
+
+        composable("profile"){
+            ProfileScreen()
+        }
+
+        composable("setting"){
+            SettingScreen()
+        }
+    }
+}
+
+
+@Composable
+fun BottomNavigationBar(
+    items: List<BottomNavItem>,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    onItemClick: (BottomNavItem) -> Unit
+
+) {
+    val backStackEntry = navController.currentBackStackEntryAsState()
+
+    BottomNavigation(
+        modifier = modifier,
+        backgroundColor = Color.DarkGray,
+        elevation = 5.dp
+    ) {
+        items.forEach { item ->
+            val selected = item.route == backStackEntry.value?.destination?.route
+            BottomNavigationItem(
+                selected = selected,
+                onClick = { onItemClick(item) },
+                selectedContentColor = Color.Green,
+                unselectedContentColor = Color.Gray,
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.name
+                    )
+                }
+            )
+        }
+    }
+}
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent{
-            ListMeTheme {
-                var name by remember {
-                    mutableStateOf("")
-                }
+            super.onCreate(savedInstanceState)
+            setContent {
+                ListMeTheme {
+                    val navController = rememberNavController()
+                    val items = listOf(
+                        BottomNavItem(
+                            name = "Home",
+                            route = "home",
+                            icon = Icons.Default.Home
+                        ),
+                        BottomNavItem(
+                            name = "Profile",
+                            route = "profile",
+                            icon = Icons.Default.Person
+                        ),
+                        BottomNavItem(
+                            name = "Setting",
+                            route = "setting",
+                            icon = Icons.Default.Settings
+                        ),
+                    )
 
-                var names by remember {
-                    mutableStateOf( listOf<String>() )
-                }
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Row (
-                        modifier = Modifier.fillMaxWidth()
+                    Scaffold(
+                        bottomBar = {
+                            BottomNavigationBar(
+                                items = items,
+                                navController = navController,
+                                onItemClick = {
+                                    navController.navigate(it.route)
+                                })
+                        }
                     ) {
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = { text ->
-                                name = text
-                            },
-                            modifier = Modifier.weight(
-                                weight = 2.0f,
-                                true
-                            )
-                        )
-                        
-                        Spacer(modifier = Modifier.width(16.dp))
-                        
-                        Button (onClick = {
-                            if(name.isNotBlank()){
-                                names = names + name
-                                name = ""
-                            }
-                        }){
-                            Text(text = "Add")
-                        }
-                    }
-
-                    LazyColumn {
-                        items(names){ currentName ->
-                            Text(
-                                text = currentName,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            )
-                            Divider(
-                                modifier = Modifier.fillMaxWidth(),
-                                color = Color.Black,
-                                thickness = 1.dp
-                            )
-                        }
+                        Navigation(navController = navController)
                     }
                 }
             }
         }
-    }
 }
 
 /*
