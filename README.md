@@ -1,9 +1,6 @@
-chapter 3
----------
+Goal of this chapter:
 
-this chapter is about:
-
-1. navigations
-2. moving between screens
-3. passing data between screens
-4. Context
+this chapter will have 3 main screens,
+the main screen, which contains the list of items
+the input screen, which contains basic form
+the profile screen, which contains minimal user profile screen
